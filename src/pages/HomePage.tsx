@@ -1,6 +1,6 @@
 // src/pages/HomePage.tsx
 import React from 'react';
-import { Container, Box } from '@mui/material';
+import { Container, Box, Button} from '@mui/material';
 import ProductCard from '../components/ProductCard';
 
 const products = [
@@ -10,7 +10,7 @@ const products = [
 ];
 
 const HomePage = () => (
-  <Container sx={{ marginTop: 4 }}>
+  <Container sx={{ marginTop: 4}}>
     <Box display="flex" flexWrap="wrap" gap={2}>
       {products.map((product, index) => (
         <Box key={index} sx={{ width: { xs: '100%', sm: '48%', md: '30%' } }}>

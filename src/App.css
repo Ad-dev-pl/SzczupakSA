@@ -1,38 +1,100 @@
+/* === Reset podstawowy === */
+body, html, #root {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+  background-color: #f4f7f6;
+  color: #1a1a1a;
+  min-height: 100vh;
+}
+
+/* === Ogólne style aplikacji === */
 .App {
   text-align: center;
+  padding: 20px;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* === Pasek nagłówka === */
+.MuiAppBar-root {
+  background: linear-gradient(90deg, #0d3b2e, #1e2a78); /* zieleń + granat */
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* === Przycisk nagłówka === */
+.MuiButton-root {
+  text-transform: none;
+  font-weight: 500;
+  font-size: 16px;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+/* === Karty produktów === */
+.MuiCard-root {
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease;
+  background-color: #ffffff;
+}
+
+.MuiCard-root:hover {
+  transform: translateY(-4px);
+}
+
+/* === Obrazek w karcie produktu === */
+.MuiCard-root img {
+  max-height: 200px;
+  object-fit: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+}
+
+/* === Tytuł strony === */
+.MuiTypography-h4 {
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* === SearchBar (szukajka z lupą) === */
+form {
   display: flex;
-  flex-direction: column;
-  align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  margin-bottom: 24px;
 }
 
-.App-link {
-  color: #61dafb;
+.MuiPaper-root {
+  border-radius: 50px;
+  background-color: #e8f5e9; /* delikatna zieleń */
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+/* === Snackbar (powiadomienie dodania do koszyka) === */
+.MuiSnackbar-root {
+  bottom: 24px;
+}
+
+/* === Koszyk === */
+.cart-page {
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 16px;
+  max-width: 800px;
+  margin: 0 auto;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+}
+
+/* === Przycisk dodaj do koszyka === */
+.MuiButton-containedPrimary {
+  background-color: #1e2a78;
+}
+
+.MuiButton-containedPrimary:hover {
+  background-color: #283593;
+}
+
+/* === Linki === */
+a {
+  color: #0d47a1;
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
 }

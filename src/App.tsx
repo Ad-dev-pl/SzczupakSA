@@ -4,9 +4,10 @@ import { Container, Box } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProductCard from './components/ProductCard';
-
+import ProduktyPage from './pages/ProductsPage';
 import CartPage from './pages/CartPage';
 import { CartProvider } from './context/CartContext';
+import ProduktDetails from './pages/ProductsDetails';
 
 // Przykładowe dane produktów
 const products = [
@@ -37,6 +38,8 @@ const App = () => (
         <Route path="/" element={<HomePage />} />
         {/* Strona koszyka */}
         <Route path="/cart" element={<CartPage />} />
+        <Route path="/ProduktyPage" element={<ProduktyPage />} />
+        <Route path="/produkt/:id" element={<ProduktDetails />} />
       </Routes>
       <Footer />
     </Router>

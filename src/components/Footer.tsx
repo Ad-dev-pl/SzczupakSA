@@ -4,7 +4,7 @@ import { Box, Typography, Link } from '@mui/material';
 
 const Footer = () => {
   return (
-    <Box sx={{ padding: '20px', backgroundColor: '#f1f1f1' }}>
+    <Box sx={{ marginTop: 4, padding: '20px', backgroundColor: '#f1f1f1' }}>
       <Typography variant="body1" align="center">
         © 2025 Sklep Wędkarsko-Muzyczny
       </Typography>
