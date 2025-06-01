@@ -1,35 +1,7 @@
 import React, { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {
-  InputBase,
-  IconButton,
-  Paper,
-  alpha,
-  styled,
-} from '@mui/material';
+import { Paper, InputBase, IconButton } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
-
-const SearchContainer = styled(Paper)(({ theme }) => ({
-  display: 'flex',
-  alignItems: 'center',
-  width: 40,
-  transition: 'width 0.3s ease',
-  overflow: 'hidden',
-  '&:hover': {
-    width: 200,
-    boxShadow: theme.shadows[3],
-  },
-}));
-
-const StyledInput = styled(InputBase)(({ theme }) => ({
-  marginLeft: theme.spacing(1),
-  flex: 1,
-  opacity: 0,
-  transition: 'opacity 0.3s ease',
-  [`${SearchContainer}:hover &`]: {
-    opacity: 1,
-  },
-}));
 
 const SearchBar = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,19 +27,28 @@ const SearchBar = () => {
   };
 
   return (
-    <form onSubmit={handleSearch}>
-      <SearchContainer elevation={1}>
-        <IconButton type="submit" sx={{ p: 1 }}>
-          <SearchIcon />
-        </IconButton>
-        <StyledInput
-          placeholder="Szukaj…"
-          inputProps={{ 'aria-label': 'szukaj' }}
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-      </SearchContainer>
-    </form>
+    <Paper
+      component="form"
+      onSubmit={handleSearch}
+      sx={{
+        p: '2px 4px',
+        display: 'flex',
+        alignItems: 'center',
+        width: 300,
+      }}
+    >
+      <InputBase
+        sx={{ ml: 1, flex: 1 }}
+        placeholder="Szukaj..."
+        inputProps={{ 'aria-label': 'szukaj' }}
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        autoFocus
+      />
+      <IconButton type="submit" sx={{ p: '10px' }} aria-label="search">
+        <SearchIcon />
+      </IconButton>
+    </Paper>
   );
 };
 

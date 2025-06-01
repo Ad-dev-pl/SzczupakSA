@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Container, Box } from '@mui/material';
+import { Container, Box, CssBaseline, createTheme, ThemeProvider } from '@mui/material';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ProductCard from './components/ProductCard';
 import ProduktyPage from './pages/ProductsPage';
 import CartPage from './pages/CartPage';
+import SettingsPage from './pages/SettingsPage';
 import { CartProvider } from './context/CartContext';
 import ProduktDetails from './pages/ProductsDetails';
+import { AuthProvider } from './context/AuthContext';
 
 // Przykładowe dane produktów
 const products = [
@@ -29,21 +31,50 @@ const HomePage = () => (
   </Container>
 );
 
-const App = () => (
-  <CartProvider>
-    <Router>
-      <Header />
-      <Routes>
-        {/* Strona główna */}
-        <Route path="/" element={<HomePage />} />
-        {/* Strona koszyka */}
-        <Route path="/cart" element={<CartPage />} />
-        <Route path="/ProduktyPage" element={<ProduktyPage />} />
-        <Route path="/produkt/:id" element={<ProduktDetails />} />
-      </Routes>
-      <Footer />
-    </Router>
-  </CartProvider>
-);
+const App = () => {
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('darkMode') === 'true');
+
+  // Synchronizuj stan darkMode z localStorage
+  useEffect(() => {
+    localStorage.setItem('darkMode', darkMode.toString());
+  }, [darkMode]);
+
+  // Tworzymy motyw MUI na podstawie darkMode
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode: darkMode ? 'dark' : 'light',
+        },
+      }),
+    [darkMode]
+  );
+
+  // Funkcja do przełączania trybu
+  const toggleDarkMode = () => {
+    setDarkMode((prev) => !prev);
+  };
+
+  return (
+    <AuthProvider>
+      <CartProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <Router>
+            <Header darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
+            <Routes>
+              <Route path="/" element={<HomePage />} />
+              <Route path="/cart" element={<CartPage />} />
+              <Route path="/ProduktyPage" element={<ProduktyPage />} />
+              <Route path="/produkt/:id" element={<ProduktDetails />} />
+              <Route path="/settings" element={<SettingsPage darkMode={darkMode} toggleDarkMode={toggleDarkMode} />} />
+            </Routes>
+            <Footer darkMode={darkMode} />
+          </Router>
+        </ThemeProvider>
+      </CartProvider>
+    </AuthProvider>
+  );
+};
 
 export default App;
