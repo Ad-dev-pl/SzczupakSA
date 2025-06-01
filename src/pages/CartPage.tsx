@@ -1,4 +1,3 @@
-// src/pages/CartPage.tsx
 import React from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
@@ -27,6 +26,7 @@ const CartPage = () => {
       id: Date.now(),
       items: cart,
       date: new Date().toLocaleString(),
+      status: "placed", // Dodane: status zamówienia
     };
 
     addOrder(newOrder);

@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { Avatar, IconButton, Menu, MenuItem, ListItemIcon } from "@mui/material";
 import { Logout, Settings, Login } from "@mui/icons-material";
-import { useAuth } from "../context/AuthContext"; // <-- zakładamy, że masz AuthContext
+import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 const UserMenu = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 
-  const { user, login, logout } = useAuth(); // <-- dane użytkownika
+  const { user, logout } = useAuth();
   const navigate = useNavigate();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -25,10 +25,15 @@ const UserMenu = () => {
     handleClose();
   };
 
+  const handleLoginRedirect = () => {
+    navigate("/login");
+    handleClose();
+  };
+
   return (
     <>
-      <IconButton onClick={handleClick} size="small">
-        <Avatar src={user?.avatar}>{user?.name?.[0] || "?"}</Avatar>
+      <IconButton onClick={handleClick} size="small" title={user ? `${user.firstName} ${user.lastName}` : "Zaloguj się"}>
+        <Avatar src={user?.avatar}>{user?.firstName?.[0] || "?"}</Avatar>
       </IconButton>
 
       <Menu
@@ -63,7 +68,10 @@ const UserMenu = () => {
           <>
             <MenuItem>
               <Avatar src={user.avatar} sx={{ width: 24, height: 24, mr: 1 }} />
-              {user.name}
+              {/* Jeśli chcesz pełne imię i nazwisko lub nazwę */}
+              {user.firstName && user.lastName
+                ? `${user.firstName} ${user.lastName}`
+                : user.name || "Użytkownik"}
             </MenuItem>
             <MenuItem component={Link} to="/settings#orders">Moje zamówienia</MenuItem>
             <MenuItem onClick={handleSettings}>
@@ -85,12 +93,7 @@ const UserMenu = () => {
             </MenuItem>
           </>
         ) : (
-          <MenuItem
-            onClick={() => {
-              login();
-              handleClose();
-            }}
-          >
+          <MenuItem onClick={handleLoginRedirect}>
             <ListItemIcon>
               <Login fontSize="small" />
             </ListItemIcon>

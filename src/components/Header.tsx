@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ darkMode, toggleDarkMode }) => {
         <Button color="inherit" component={Link} to="/ProduktyPage">Produkty</Button>
         <Button color="inherit" component={Link} to="/kontakt">Kontakt</Button>
         <Button color="inherit" component={Link} to="/cart">Koszyk</Button>
-
+        <Button color="inherit" component={Link} to="/orders">Moje Zamówienia</Button>
         {/* Przycisk przełączania trybu */}
         <IconButton color="inherit" onClick={toggleDarkMode}>
           {darkMode ? <Brightness7Icon /> : <Brightness4Icon />}
