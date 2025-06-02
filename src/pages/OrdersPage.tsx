@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
+import type { TDocumentDefinitions } from 'pdfmake/interfaces';
+
 import { Container, Typography, List, ListItem, ListItemText, Button, Box, Divider } from '@mui/material';
-import jsPDF from 'jspdf';
+
+(pdfMake as any).vfs = (pdfFonts as any).vfs;
 
 const OrdersPage = () => {
   const { orders, cancelOrder, user } = useAuth();
@@ -15,32 +20,54 @@ const OrdersPage = () => {
     const order = orders.find(o => o.id === orderId);
     if (!order) return;
 
-    const doc = new jsPDF();
+    const itemsTableBody = [
+      ['Nazwa produktu', 'Cena (zł)'],
+      ...order.items.map((item: any) => [item.name, item.price.toFixed(2)]),
+    ];
 
-    doc.setFontSize(18);
-    doc.text('Faktura (symulacja)', 14, 20);
+    const total = order.items.reduce((sum: number, item: any) => sum + item.price, 0);
 
-    doc.setFontSize(12);
-    doc.text(`Zamówienie nr: ${order.id}`, 14, 30);
-    doc.text(`Data zamówienia: ${order.date}`, 14, 38);
+    const docDefinition: TDocumentDefinitions = {
+      content: [
+        { text: 'Faktura (symulacja)', style: 'header' },
+        { text: `Zamówienie nr: ${order.id}`, margin: [0, 10, 0, 2] },
+        { text: `Data zamówienia: ${order.date}`, margin: [0, 0, 0, 10] },
+        { text: `Zamawiający: ${user?.name || user?.username || 'Brak danych'}`, margin: [0, 0, 0, 2] },
+        { text: `Adres dostawy: ${user?.address || 'Brak adresu'}`, margin: [0, 0, 0, 10] },
 
-    doc.text(`Zamawiający: ${user?.name || user?.username || 'Brak danych'}`, 14, 46);
-    doc.text(`Adres dostawy: ${user?.address || 'Brak adresu'}`, 14, 54);
+        {
+          style: 'tableExample',
+          table: {
+            headerRows: 1,
+            widths: ['*', 'auto'],
+            body: itemsTableBody,
+          },
+          layout: 'lightHorizontalLines',
+        },
 
-    doc.text('Produkty:', 14, 64);
+        { text: `Razem: ${total.toFixed(2)} zł`, style: 'total', margin: [0, 10, 0, 0] },
+        { text: 'Metoda płatności: Za pobraniem', margin: [0, 5, 0, 0] },
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10],
+        },
+        total: {
+          bold: true,
+          fontSize: 14,
+        },
+        tableExample: {
+          margin: [0, 5, 0, 15],
+        },
+      },
+      defaultStyle: {
+        font: 'Roboto',
+      },
+    };
 
-    let y = 72;
-    order.items.forEach((item, index) => {
-      doc.text(`${index + 1}. ${item.name} — ${item.price.toFixed(2)} zł`, 20, y);
-      y += 8;
-    });
-
-    const total = order.items.reduce((sum, item) => sum + item.price, 0);
-    doc.text(`Razem: ${total.toFixed(2)} zł`, 14, y + 6);
-
-    doc.text('Metoda płatności: Za pobraniem', 14, y + 16);
-
-    doc.save(`faktura_zamowienie_${order.id}.pdf`);
+    pdfMake.createPdf(docDefinition).download(`faktura_zamowienie_${order.id}.pdf`);
   };
 
   return (
@@ -51,7 +78,7 @@ const OrdersPage = () => {
         <Typography>Nie masz jeszcze żadnych zamówień.</Typography>
       ) : (
         <List>
-          {orders.map((order) => (
+          {orders.map((order: any) => (
             <Box key={order.id} mb={2}>
               <ListItem
                 component="button"
@@ -77,8 +104,8 @@ const OrdersPage = () => {
                   <Typography variant="subtitle1" sx={{ fontWeight: 'bold' }}>
                     Szczegóły zamówienia:
                   </Typography>
-                  {order.items.map((item, index) => (
-                    <Typography key={index}>• {item.name} – {item.price} zł</Typography>
+                  {order.items.map((item: any, index: number) => (
+                    <Typography key={index}>• {item.name} – {item.price.toFixed(2)} zł</Typography>
                   ))}
 
                   <Divider sx={{ my: 1 }} />

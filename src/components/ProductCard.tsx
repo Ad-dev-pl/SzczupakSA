@@ -1,42 +1,38 @@
-import React, { useState } from 'react';
-import { Card, CardContent, Typography, Button, Snackbar } from '@mui/material';
-import { useCart } from '../context/CartContext'
+import React from "react";
+import { Card, CardMedia, CardContent, Typography, CardActions, Button } from "@mui/material";
 
-type Props = {
+interface Produkt {
+  id: number;
+  nazwa: string;
+  kategoria: string;
+  cena: number;
+  ocena: number;
+  nowosc: boolean;
+  promocja: boolean;
   imageUrl: string;
-  name: string;
-  price: number;
-};
+}
 
-const ProductCard: React.FC<Props> = ({ imageUrl, name, price }) => {
-  const { addToCart } = useCart();
-  const [open, setOpen] = useState(false);
+interface ProductCardProps {
+  produkt: Produkt;
+  addToCart: (produkt: Produkt) => void;
+  onDetails?: () => void; // opcjonalnie handler do przejścia do szczegółów
+}
 
-  const handleAddToCart = () => {
-    addToCart({ imageUrl, name, price });
-    setOpen(true);
-  };
-
+const ProductCard = ({ produkt, addToCart, onDetails }: ProductCardProps) => {
   return (
     <Card>
-      <img src={imageUrl} alt={name} style={{ width: '100%' }} />
+      <CardMedia component="img" height="140" image={produkt.imageUrl} alt={produkt.nazwa} />
       <CardContent>
-        <Typography variant="h6">{name}</Typography>
-        <Typography variant="subtitle1">{price} zł</Typography>
-        <Button onClick={handleAddToCart} variant="contained" color="primary">
-          Dodaj do koszyka
-        </Button>
-        <Snackbar
-            open={open}
-            autoHideDuration={3000}
-            onClose={(event, reason) => {
-                if (reason === 'clickaway') return;
-                setOpen(false);
-            }}
-            message="Nowy produkt w koszyku!"
-        />
-
+        <Typography variant="h6">{produkt.nazwa}</Typography>
+        <Typography variant="body2" color="text.secondary">Cena: {produkt.cena} zł</Typography>
+        <Typography variant="body2" color="text.secondary">Ocena: {produkt.ocena}</Typography>
+        {produkt.nowosc && <Typography variant="caption" color="primary">Nowość!</Typography>}
+        {produkt.promocja && <Typography variant="caption" color="secondary">Promocja!</Typography>}
       </CardContent>
+      <CardActions>
+        <Button size="small" onClick={onDetails}>Szczegóły</Button>
+        <Button size="small" variant="contained" onClick={() => addToCart(produkt)}>Dodaj do koszyka</Button>
+      </CardActions>
     </Card>
   );
 };

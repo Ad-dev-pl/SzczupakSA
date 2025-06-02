@@ -1,17 +1,22 @@
-import { useEffect} from 'react';
+// src/pages/ProduktyPage.tsx
+import React, { useEffect, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { useState } from 'react';
+import { Container, Typography } from '@mui/material';
 import ProduktForm from '../components/ProductsForm';
 import Filters from '../components/Filters';
 import ProduktList from '../components/ProductsList';
-import { Container, Typography } from '@mui/material';
 
 export interface Produkt {
   id: number;
   nazwa: string;
   kategoria: string;
   cena: number;
+  ocena: number;
+  nowosc: boolean;
+  promocja: boolean;
+  imageUrl: string;
 }
+
 export interface FiltrState {
   wyszukiwarka: string;
   kategoria: string;
@@ -30,13 +35,20 @@ const ProduktyPage = () => {
   });
 
   useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem('produkty') || '[]');
+    setProdukty(stored);
+  }, []);
+
+  useEffect(() => {
     if (queryParam) {
       setFiltr((prev) => ({ ...prev, wyszukiwarka: queryParam }));
     }
   }, [queryParam]);
-  
+
   const dodajProdukt = (nowy: Produkt) => {
-    setProdukty(prev => [...prev, nowy]);
+    const updated = [...produkty, nowy];
+    setProdukty(updated);
+    localStorage.setItem('produkty', JSON.stringify(updated));
   };
 
   const przefiltrowane = produkty

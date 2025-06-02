@@ -13,26 +13,34 @@ import {
 } from '@mui/material';
 
 const CartPage = () => {
-  const { cart, clearCart } = useCart();
+  const { cartItems, clearCart } = useCart();
   const { user, addOrder } = useAuth();
 
   const handlePlaceOrder = () => {
-    if (!user) {
-      alert('Proszę się zalogować, aby złożyć zamówienie.');
-      return;
-    }
+  if (!user) {
+    alert('Proszę się zalogować, aby złożyć zamówienie.');
+    return;
+  }
 
-    const newOrder = {
-      id: Date.now(),
-      items: cart,
-      date: new Date().toLocaleString(),
-      status: "placed", // Dodane: status zamówienia
-    };
+  const orderItems = cartItems.map(item => ({
+    id: item.id,
+    name: item.nazwa,
+    price: item.cena,
+    quantity: item.ilosc,
+  }));
 
-    addOrder(newOrder);
-    clearCart();
-    alert('Dziękujemy za zakupy! Twoje zamówienie zostało zapisane.');
+  const newOrder = {
+    id: Date.now(),
+    items: orderItems,
+    date: new Date().toLocaleString(),
+    status: "placed",
   };
+
+  addOrder(newOrder);
+  clearCart();
+  alert('Dziękujemy za zakupy! Twoje zamówienie zostało zapisane.');
+};
+
 
   return (
     <Container sx={{ marginTop: 4 }}>
@@ -40,17 +48,17 @@ const CartPage = () => {
         Twój koszyk
       </Typography>
 
-      {cart.length === 0 ? (
+      {cartItems.length === 0 ? (
         <Typography variant="subtitle1">Koszyk jest pusty.</Typography>
       ) : (
         <>
           <List>
-            {cart.map((item, index) => (
+            {cartItems.map((item, index) => (
               <div key={index}>
                 <ListItem>
                   <ListItemText
-                    primary={item.name}
-                    secondary={`Cena: ${item.price} zł`}
+                    primary={item.nazwa}
+                    secondary={`Cena: ${item.cena} zł`}
                   />
                 </ListItem>
                 <Divider />

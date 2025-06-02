@@ -17,7 +17,7 @@ interface Produkt {
   nazwa: string;
   kategoria: string;
   cena: number;
-  imageUrl?: string; // jeśli masz zdjęcia
+  imageUrl?: string;
 }
 
 interface Props {
@@ -34,33 +34,31 @@ const ProduktList = ({ produkty }: Props) => {
   };
 
   const handleAddToCart = (e: React.MouseEvent, produkt: Produkt) => {
-    e.stopPropagation(); // żeby nie otworzyć szczegółów klikając ikonę
-    addToCart({
-      imageUrl: produkt.imageUrl || '',
-      name: produkt.nazwa,
-      price: produkt.cena,
-    });
+    e.stopPropagation();
+    addToCart(produkt); // przekazujemy cały obiekt produktu
     setOpenSnackbar(true);
   };
 
   return (
     <>
-      {produkty.map((p) => (
-        <div key={p.id}>
-          <ListItem disablePadding>
-            <ListItemButton onClick={() => handleClick(p.id)}>
-              <ListItemText
-                primary={p.nazwa}
-                secondary={`${p.kategoria} — ${p.cena} zł`}
-              />
-              <IconButton edge="end" onClick={(e) => handleAddToCart(e, p)}>
-                <AddShoppingCartIcon />
-              </IconButton>
-            </ListItemButton>
-          </ListItem>
-          <Divider />
-        </div>
-      ))}
+      <List>
+        {produkty.map((p) => (
+          <div key={p.id}>
+            <ListItem disablePadding>
+              <ListItemButton onClick={() => handleClick(p.id)}>
+                <ListItemText
+                  primary={p.nazwa}
+                  secondary={`${p.kategoria} — ${p.cena} zł`}
+                />
+                <IconButton edge="end" onClick={(e) => handleAddToCart(e, p)}>
+                  <AddShoppingCartIcon />
+                </IconButton>
+              </ListItemButton>
+            </ListItem>
+            <Divider />
+          </div>
+        ))}
+      </List>
 
       <Snackbar
         open={openSnackbar}
